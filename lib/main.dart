@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:messenger/colors.dart';
+import 'package:messenger/features/landing/screens/landing_screen.dart';
+import 'package:messenger/firebase_options.dart';
 import 'package:messenger/responsive/responsive_layout.dart';
 import 'package:messenger/screens/mobile_screen_layout.dart';
 import 'package:messenger/screens/web_screen_layout.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -19,10 +26,11 @@ class MyApp extends StatelessWidget {
       title: 'Messenger',
       theme:
           ThemeData.dark().copyWith(scaffoldBackgroundColor: backgroundColor),
-      home: const ResponsiveLayout(
-        mobileScreenLayout: MobileScreenLayout(),
-        webScreenLayout: WebScreenLayout(),
-      ),
+      // home: const ResponsiveLayout(
+      //   mobileScreenLayout: MobileScreenLayout(),
+      //   webScreenLayout: WebScreenLayout(),
+      // ),
+      home: LandingScreen(),
     );
   }
 }
