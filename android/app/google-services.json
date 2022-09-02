@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "988161204906-p8ufq858s0e1mliftn0t1h1jmj4cfak0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.messenger",
+            "certificate_hash": "940506189fd731dac3585ec24740d0f45bde2311"
+          }
+        },
+        {
           "client_id": "988161204906-rrhsjqdf3bec4cb9gv5ek0svguq2p6pe.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "988161204906-rrhsjqdf3bec4cb9gv5ek0svguq2p6pe.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "988161204906-mntlu8lf13rj9rqv8324mvf25dqb1jkl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.messenger"
+              }
             }
           ]
         }
