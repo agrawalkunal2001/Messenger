@@ -47,6 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           .signInWithPhone(context,
               '+${country!.phoneCode}${phoneNumber}'); // Changed stateful to consumer stateful widget to access widget ref. Ref is providers interacting with providers. Widget ref is widgets interacting with providers.
       // Firebase auth will fail without country code.
+
     } else {
       showSnackBar(context: context, content: "Fill out all the fields!");
     }
