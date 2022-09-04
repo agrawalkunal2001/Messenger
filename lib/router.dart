@@ -5,7 +5,7 @@ import 'package:messenger/features/auth/screens/login_screen.dart';
 import 'package:messenger/features/auth/screens/otp_screen.dart';
 import 'package:messenger/features/auth/screens/user_information_screen.dart';
 import 'package:messenger/features/select_contacts/screens/select_contacts_screen.dart';
-import 'package:messenger/screens/mobile_chat_screen.dart';
+import 'package:messenger/features/chat/screens/mobile_chat_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {

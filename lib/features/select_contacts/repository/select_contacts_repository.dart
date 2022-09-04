@@ -4,7 +4,7 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:messenger/common/utils/utils.dart';
 import 'package:messenger/models/user_model.dart';
-import 'package:messenger/screens/mobile_chat_screen.dart';
+import 'package:messenger/features/chat/screens/mobile_chat_screen.dart';
 
 final selectContactsRepositoryProvider = Provider(
     (ref) => SelectContactsRepository(firestore: FirebaseFirestore.instance));
