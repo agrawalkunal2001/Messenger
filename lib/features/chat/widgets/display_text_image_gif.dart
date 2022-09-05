@@ -1,13 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:messenger/common/enums/message_enum.dart';
+import 'package:messenger/features/chat/widgets/video_player_item.dart';
 
 class DisplayTextImageGIF extends StatelessWidget {
   final String message;
   final MessageEnum type;
-  const DisplayTextImageGIF(
-      {Key? key, required this.message, required this.type})
-      : super(key: key);
+
+  const DisplayTextImageGIF({
+    Key? key,
+    required this.message,
+    required this.type,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +20,8 @@ class DisplayTextImageGIF extends StatelessWidget {
             message,
             style: const TextStyle(fontSize: 16),
           )
-        : CachedNetworkImage(imageUrl: message);
+        : type == MessageEnum.video
+            ? VideoPlayerItem(videoUrl: message)
+            : CachedNetworkImage(imageUrl: message);
   }
 }
