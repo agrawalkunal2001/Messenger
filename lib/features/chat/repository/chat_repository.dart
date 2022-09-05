@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:messenger/common/enums/message_enum.dart';
+import 'package:messenger/common/repositories/common_firebase_storage_repository.dart';
 import 'package:messenger/common/utils/utils.dart';
 import 'package:messenger/models/chat_contact.dart';
 import 'package:messenger/models/message.dart';
@@ -144,13 +147,12 @@ class ChatRepository {
       required UserModel senderUser}) async {
     try {
       var timeSent = DateTime.now();
+      var messageId = const Uuid().v1();
 
       UserModel receiverUserData;
       var userDataMap =
           await firestore.collection("Users").doc(receiverUserId).get();
       receiverUserData = UserModel.fromMap(userDataMap.data()!);
-
-      var messageId = const Uuid().v1();
 
       _saveDataToContactsSubCollection(
           senderUser, receiverUserData, text, timeSent, receiverUserId);
@@ -163,6 +165,62 @@ class ChatRepository {
           messageType: MessageEnum.text,
           userName: senderUser.name,
           receiverUserName: receiverUserData.name);
+    } catch (e) {
+      showSnackBar(context: context, content: e.toString());
+    }
+  }
+
+  void sendFileMessage(
+      {required BuildContext context,
+      required File file,
+      required String receiverUserId,
+      required UserModel senderUserData,
+      required ProviderRef ref,
+      required MessageEnum messageEnum}) async {
+    try {
+      var timeSent = DateTime.now();
+      var messageId = const Uuid().v1();
+
+      String url = await ref
+          .read(commonFirebaseStorageRepositoryProvider)
+          .storeFileToFirebase(
+              "Chat/${messageEnum.type}/${senderUserData.uid}/$receiverUserId/$messageId",
+              file);
+
+      UserModel receiverUserData;
+      var userDataMap =
+          await firestore.collection("Users").doc(receiverUserId).get();
+      receiverUserData = UserModel.fromMap(userDataMap.data()!);
+
+      String contactSubMessage;
+      switch (messageEnum) {
+        case MessageEnum.image:
+          contactSubMessage = "📷 Photo";
+          break;
+        case MessageEnum.video:
+          contactSubMessage = "📸 Video";
+          break;
+        case MessageEnum.audio:
+          contactSubMessage = "🔉 Audio";
+          break;
+        case MessageEnum.gif:
+          contactSubMessage = "GIF";
+          break;
+        default:
+          contactSubMessage = "GIF";
+      }
+
+      _saveDataToContactsSubCollection(senderUserData, receiverUserData,
+          contactSubMessage, timeSent, receiverUserId);
+
+      _saveMessageToMessageSubCollection(
+          receiverUserId: receiverUserId,
+          text: url,
+          timeSent: timeSent,
+          messageId: messageId,
+          userName: senderUserData.name,
+          receiverUserName: receiverUserData.name,
+          messageType: messageEnum);
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
