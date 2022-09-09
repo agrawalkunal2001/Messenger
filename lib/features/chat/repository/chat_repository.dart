@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:messenger/common/enums/message_enum.dart';
+import 'package:messenger/common/providers/message_reply_provider.dart';
 import 'package:messenger/common/repositories/common_firebase_storage_repository.dart';
 import 'package:messenger/common/utils/utils.dart';
 import 'package:messenger/models/chat_contact.dart';
@@ -104,22 +105,33 @@ class ChatRepository {
         .set(senderChatContact.toMap());
   }
 
-  void _saveMessageToMessageSubCollection(
-      {required String receiverUserId,
-      required String text,
-      required DateTime timeSent,
-      required String messageId,
-      required String userName,
-      required String receiverUserName,
-      required MessageEnum messageType}) async {
+  void _saveMessageToMessageSubCollection({
+    required String receiverUserId,
+    required String text,
+    required DateTime timeSent,
+    required String messageId,
+    required String userName,
+    required String? receiverUserName,
+    required MessageEnum messageType,
+    required MessageReply? messageReply,
+  }) async {
     final message = Message(
-        senderId: auth.currentUser!.uid,
-        receiverId: receiverUserId,
-        text: text,
-        type: messageType,
-        timeSent: timeSent,
-        messageId: messageId,
-        isSeen: false);
+      senderId: auth.currentUser!.uid,
+      receiverId: receiverUserId,
+      text: text,
+      type: messageType,
+      timeSent: timeSent,
+      messageId: messageId,
+      isSeen: false,
+      repliedMessage: messageReply == null ? "" : messageReply.message,
+      repliedTo: messageReply == null
+          ? ""
+          : messageReply.isMe
+              ? userName
+              : receiverUserName ?? "",
+      repliedMessageType:
+          messageReply == null ? MessageEnum.text : messageReply.messageEnum,
+    );
     // Users->senderId->chats->receiverId->messages->messageId->store message
     await firestore
         .collection("Users")
@@ -144,7 +156,8 @@ class ChatRepository {
       {required BuildContext context,
       required String text,
       required String receiverUserId,
-      required UserModel senderUser}) async {
+      required UserModel senderUser,
+      required MessageReply? messageReply}) async {
     try {
       var timeSent = DateTime.now();
       var messageId = const Uuid().v1();
@@ -158,13 +171,15 @@ class ChatRepository {
           senderUser, receiverUserData, text, timeSent, receiverUserId);
 
       _saveMessageToMessageSubCollection(
-          receiverUserId: receiverUserId,
-          text: text,
-          timeSent: timeSent,
-          messageId: messageId,
-          messageType: MessageEnum.text,
-          userName: senderUser.name,
-          receiverUserName: receiverUserData.name);
+        receiverUserId: receiverUserId,
+        text: text,
+        timeSent: timeSent,
+        messageId: messageId,
+        messageType: MessageEnum.text,
+        userName: senderUser.name,
+        receiverUserName: receiverUserData.name,
+        messageReply: messageReply,
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
@@ -176,7 +191,8 @@ class ChatRepository {
       required String receiverUserId,
       required UserModel senderUserData,
       required ProviderRef ref,
-      required MessageEnum messageEnum}) async {
+      required MessageEnum messageEnum,
+      required MessageReply? messageReply}) async {
     try {
       var timeSent = DateTime.now();
       var messageId = const Uuid().v1();
@@ -214,13 +230,15 @@ class ChatRepository {
           contactSubMessage, timeSent, receiverUserId);
 
       _saveMessageToMessageSubCollection(
-          receiverUserId: receiverUserId,
-          text: url,
-          timeSent: timeSent,
-          messageId: messageId,
-          userName: senderUserData.name,
-          receiverUserName: receiverUserData.name,
-          messageType: messageEnum);
+        receiverUserId: receiverUserId,
+        text: url,
+        timeSent: timeSent,
+        messageId: messageId,
+        userName: senderUserData.name,
+        receiverUserName: receiverUserData.name,
+        messageType: messageEnum,
+        messageReply: messageReply,
+      );
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
