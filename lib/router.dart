@@ -6,6 +6,7 @@ import 'package:messenger/common/widgets/error.dart';
 import 'package:messenger/features/auth/screens/login_screen.dart';
 import 'package:messenger/features/auth/screens/otp_screen.dart';
 import 'package:messenger/features/auth/screens/user_information_screen.dart';
+import 'package:messenger/features/group/screens/create_group_screen.dart';
 import 'package:messenger/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:messenger/features/chat/screens/mobile_chat_screen.dart';
 import 'package:messenger/features/status/screens/confirm_status_screen.dart';
@@ -48,6 +49,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) => StatusScreen(status: status),
       );
+    case CreateGroupScreen.routeName:
+      return MaterialPageRoute(builder: (context) => CreateGroupScreen());
     default:
       MaterialPageRoute(
         builder: (context) => const Scaffold(

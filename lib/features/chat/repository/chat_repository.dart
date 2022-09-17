@@ -9,6 +9,7 @@ import 'package:messenger/common/providers/message_reply_provider.dart';
 import 'package:messenger/common/repositories/common_firebase_storage_repository.dart';
 import 'package:messenger/common/utils/utils.dart';
 import 'package:messenger/models/chat_contact.dart';
+import 'package:messenger/models/group_model.dart';
 import 'package:messenger/models/message.dart';
 import 'package:messenger/models/user_model.dart';
 import 'package:uuid/uuid.dart';
@@ -46,6 +47,21 @@ class ChatRepository {
             lastMessage: chatContact.lastMessage));
       }
       return contacts;
+    });
+  }
+
+  Stream<List<GroupModel>> getChatGroups() {
+    return firestore.collection("Groups").snapshots().map((event) {
+      List<GroupModel> groups = [];
+
+      for (var document in event.docs) {
+        var group = GroupModel.fromMap(document.data());
+        if (group.membersUid.contains(auth.currentUser!.uid)) {
+          groups.add(group);
+        }
+      }
+
+      return groups;
     });
   }
 

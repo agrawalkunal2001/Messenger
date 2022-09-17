@@ -7,6 +7,7 @@ import 'package:messenger/common/providers/message_reply_provider.dart';
 import 'package:messenger/features/auth/controller/auth_controller.dart';
 import 'package:messenger/features/chat/repository/chat_repository.dart';
 import 'package:messenger/models/chat_contact.dart';
+import 'package:messenger/models/group_model.dart';
 import 'package:messenger/models/message.dart';
 
 final chatControllerProvider = Provider((ref) {
@@ -22,6 +23,10 @@ class ChatController {
 
   Stream<List<ChatContact>> getChatContacts() {
     return chatRepository.getChatContacts();
+  }
+
+  Stream<List<GroupModel>> getChatGroups() {
+    return chatRepository.getChatGroups();
   }
 
   Stream<List<Message>> getChatMessages(String receiverUserId) {

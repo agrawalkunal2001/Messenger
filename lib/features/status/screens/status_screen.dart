@@ -41,6 +41,9 @@ class _StatusScreenState extends State<StatusScreen> {
           : StoryView(
               storyItems: storyItems,
               controller: controller,
+              onComplete: () {
+                Navigator.pop(context);
+              },
               onVerticalSwipeComplete: (direction) {
                 if (direction == Direction.down) {
                   Navigator.pop(context);

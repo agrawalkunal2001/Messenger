@@ -6,6 +6,7 @@ import 'package:messenger/colors.dart';
 import 'package:messenger/common/utils/utils.dart';
 import 'package:messenger/features/auth/controller/auth_controller.dart';
 import 'package:messenger/features/auth/repository/auth_repository.dart';
+import 'package:messenger/features/group/screens/create_group_screen.dart';
 import 'package:messenger/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:messenger/features/chat/widgets/contacts_list.dart';
 import 'package:messenger/features/status/screens/confirm_status_screen.dart';
@@ -75,12 +76,38 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
                 color: Colors.grey,
               ),
             ),
-            IconButton(
-              onPressed: () {},
+            PopupMenuButton(
               icon: const Icon(
                 Icons.more_vert,
                 color: Colors.grey,
               ),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  child: const Text("New group"),
+                  onTap: () {
+                    Future(() => Navigator.pushNamed(
+                        context,
+                        CreateGroupScreen
+                            .routeName)); // After a popup menu item is clicked, the pop function is called to dismiss itself. So, pushing an extra route will cause it to pop the route immediately instead of dismisisng itself.
+                  },
+                ),
+                PopupMenuItem(
+                  child: const Text("New broadcast"),
+                  onTap: () {},
+                ),
+                PopupMenuItem(
+                  child: const Text("Linked devices"),
+                  onTap: () {},
+                ),
+                PopupMenuItem(
+                  child: const Text("Starred messages"),
+                  onTap: () {},
+                ),
+                PopupMenuItem(
+                  child: const Text("Settings"),
+                  onTap: () {},
+                ),
+              ],
             ),
           ],
           bottom: TabBar(
