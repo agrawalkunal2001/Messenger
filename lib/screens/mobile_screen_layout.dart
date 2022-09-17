@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:messenger/colors.dart';
+import 'package:messenger/common/utils/utils.dart';
 import 'package:messenger/features/auth/controller/auth_controller.dart';
 import 'package:messenger/features/auth/repository/auth_repository.dart';
 import 'package:messenger/features/select_contacts/screens/select_contacts_screen.dart';
 import 'package:messenger/features/chat/widgets/contacts_list.dart';
+import 'package:messenger/features/status/screens/confirm_status_screen.dart';
+import 'package:messenger/features/status/screens/status_contacts_screen.dart';
 
 class MobileScreenLayout extends ConsumerStatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -14,11 +19,13 @@ class MobileScreenLayout extends ConsumerStatefulWidget {
 }
 
 class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
+  late TabController tabController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addObserver(
         this); // Every observer needs to start listening from initstate.
   }
@@ -76,13 +83,14 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
               ),
             ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
+            controller: tabController,
             indicatorColor: tabColor,
             indicatorWeight: 4,
             labelColor: tabColor,
             unselectedLabelColor: Colors.grey,
-            labelStyle: TextStyle(fontWeight: FontWeight.bold),
-            tabs: [
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            tabs: const [
               Tab(
                 text: "CHATS",
               ),
@@ -95,10 +103,25 @@ class _MobileScreenLayoutState extends ConsumerState<MobileScreenLayout>
             ],
           ),
         ),
-        body: ContactsList(),
+        body: TabBarView(
+          controller: tabController,
+          children: const [
+            ContactsList(),
+            StatusContactsScreen(),
+            Text("calls"),
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, SelectContactsScreen.routeName);
+          onPressed: () async {
+            if (tabController.index == 0) {
+              Navigator.pushNamed(context, SelectContactsScreen.routeName);
+            } else {
+              File? pickedImage = await pickImageFromGallery(context);
+              if (pickedImage != null) {
+                Navigator.pushNamed(context, ConfirmStatusScreen.routeName,
+                    arguments: pickedImage);
+              }
+            }
           },
           backgroundColor: tabColor,
           child: const Icon(
