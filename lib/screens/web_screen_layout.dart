@@ -7,7 +7,9 @@ import 'package:messenger/widgets/web_profile_bar.dart';
 import 'package:messenger/widgets/web_search_bar.dart';
 
 class WebScreenLayout extends StatelessWidget {
-  const WebScreenLayout({Key? key}) : super(key: key);
+  final bool isGroupChat;
+  const WebScreenLayout({Key? key, required this.isGroupChat})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class WebScreenLayout extends StatelessWidget {
                 Expanded(
                     child: ChatList(
                   receiverUserId: '',
+                  isGroupChat: isGroupChat,
                 )),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.1,

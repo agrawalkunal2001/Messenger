@@ -15,8 +15,10 @@ import 'package:permission_handler/permission_handler.dart';
 
 class BottomChatField extends ConsumerStatefulWidget {
   final String receiverUseriD;
+  final bool isGroupChat;
   const BottomChatField({
     required this.receiverUseriD,
+    required this.isGroupChat,
     Key? key,
   }) : super(key: key);
 
@@ -53,7 +55,10 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   void sendTextMessage() async {
     if (isShowSendButton) {
       ref.read(chatControllerProvider).sendTextMessage(
-          context, messageController.text.trim(), widget.receiverUseriD);
+          context,
+          messageController.text.trim(),
+          widget.receiverUseriD,
+          widget.isGroupChat);
       setState(() {
         messageController.text = '';
       });
@@ -76,9 +81,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
   }
 
   void sendFileMessage(File file, MessageEnum messageEnum) {
-    ref
-        .read(chatControllerProvider)
-        .sendFileMessage(context, file, widget.receiverUseriD, messageEnum);
+    ref.read(chatControllerProvider).sendFileMessage(
+        context, file, widget.receiverUseriD, messageEnum, widget.isGroupChat);
   }
 
   void selectImage() async {

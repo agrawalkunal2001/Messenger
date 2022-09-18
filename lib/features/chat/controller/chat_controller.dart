@@ -33,8 +33,12 @@ class ChatController {
     return chatRepository.getChatMessages(receiverUserId);
   }
 
-  void sendTextMessage(
-      BuildContext context, String text, String receiverUserId) {
+  Stream<List<Message>> getGroupMessages(String groupId) {
+    return chatRepository.getGroupMessages(groupId);
+  }
+
+  void sendTextMessage(BuildContext context, String text, String receiverUserId,
+      bool isGroupChat) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData((value) =>
         chatRepository.sendTextMessage(
@@ -42,12 +46,13 @@ class ChatController {
             text: text,
             receiverUserId: receiverUserId,
             senderUser: value!,
-            messageReply: messageReply));
+            messageReply: messageReply,
+            isGroupChat: isGroupChat));
     ref.read(messageReplyProvider.state).update((state) => null);
   }
 
   void sendFileMessage(BuildContext context, File file, String receiverUserId,
-      MessageEnum messageEnum) {
+      MessageEnum messageEnum, bool isGroupChat) {
     final messageReply = ref.read(messageReplyProvider);
     ref.read(userDataAuthProvider).whenData((value) =>
         chatRepository.sendFileMessage(
@@ -57,7 +62,8 @@ class ChatController {
             senderUserData: value!,
             ref: ref,
             messageEnum: messageEnum,
-            messageReply: messageReply));
+            messageReply: messageReply,
+            isGroupChat: isGroupChat));
     ref.read(messageReplyProvider.state).update((state) => null);
   }
 
