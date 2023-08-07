@@ -14,3 +14,8 @@ Full Stack Messaging App with Flutter, Firebase & Riverpod 2.0!
 - Seen Message
 - Replying to Messages
 - Auto Scroll on New Messages
+
+## Tech Stack
+
+Server: Firebase Auth, Firebase Storage, Firebase Firestore
+Client: Flutter, Riverpod
