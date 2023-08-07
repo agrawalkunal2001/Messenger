@@ -18,4 +18,5 @@ Full Stack Messaging App with Flutter, Firebase & Riverpod 2.0!
 ## Tech Stack
 
 Server: Firebase Auth, Firebase Storage, Firebase Firestore
+
 Client: Flutter, Riverpod
